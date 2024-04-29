@@ -11,11 +11,7 @@ export async function run(): Promise<void> {
   console.log('Hello! From PR-Copilot')
 
   try {
-    const git_diff_file: string = core.getInput('git_diff_file')
-    const github_token = core.getInput('GITHUB_TOKEN')
-    const context = github.context
-    const diff_file = readFileSync(git_diff_file, 'utf-8')
-    const systemPrompt = readFileSync('./prompts/system.txt', 'utf-8')
+
 
     core.debug(`Diff in input ${diff_file}`)
     console.log(`Diff in input ${diff_file}`)
@@ -26,6 +22,8 @@ export async function run(): Promise<void> {
       diff_file
     )
     console.log(`From AI:\n${ai_response}`)
+
+    echo 'lol!'
 
     // Set outputs for other workflow steps to use
     core.setOutput('result', ai_response)
