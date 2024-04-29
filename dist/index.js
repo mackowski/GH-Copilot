@@ -24957,11 +24957,13 @@ const core = __importStar(__nccwpck_require__(2186));
  */
 async function run() {
     try {
-        const git_diff = core.getInput('git_diff');
+        let git_diff = core.getInput('git_diff');
         // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
         core.debug(`Diff in input ${git_diff}`);
         console.log('Hello! From PR Copilot');
         console.log(`Diff in input ${git_diff}`);
+        git_diff = git_diff.replace(/(?<=\b(?:diff|index|---|\+\+\+|@@)) /g, '\n');
+        core.debug(`Formatted Diff:\n${git_diff}`);
         // Set outputs for other workflow steps to use
         core.setOutput('result', 'OK');
     }
