@@ -12,10 +12,8 @@ export async function run(): Promise<void> {
 
   try {
     const git_diff_file: string = core.getInput('git_diff_file')
-    const github_token = core.getInput('GITHUB_TOKEN')
-    const context = github.context
-    const diff_file = readFileSync(git_diff_file, 'utf-8')
-    const systemPrompt = readFileSync('./prompts/system.txt', 'utf-8')
+
+    echo 'lalala'
 
     core.debug(`Diff in input ${diff_file}`)
     console.log(`Diff in input ${diff_file}`)
