@@ -9,8 +9,8 @@ branding:
 
 # Define your inputs here.
 inputs:
-  git_diff:
-    description: 'Diff from GIT'
+  git_diff_file:
+    description: 'Path to diff output from git'
     required: true
   openAiApiKey:
     description: 'OpenAI API Key'

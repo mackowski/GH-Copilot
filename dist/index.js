@@ -39683,33 +39683,21 @@ const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const openai_1 = __nccwpck_require__(4499);
 const fs_1 = __nccwpck_require__(7147);
-const fs = __importStar(__nccwpck_require__(7147));
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 async function run() {
+    console.log('Hello! From PR-Copilot');
     try {
-        fs.readdir('.', (err, files) => {
-            if (err) {
-                console.error('Failed to read directory:', err);
-                return;
-            }
-            for (const file of files) {
-                console.log(file);
-            }
-        });
-        const git_diff = core.getInput('git_diff');
+        const git_diff_file = core.getInput('git_diff_file');
         const github_token = core.getInput('GITHUB_TOKEN');
         const context = github.context;
-        const file = (0, fs_1.readFileSync)('./dist/test_diff.txt', 'utf-8');
-        core.debug(`Diff in input ${file}`);
-        console.log(`Diff in input ${file}`);
-        // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-        core.debug(`Diff in input ${git_diff}`);
-        console.log('Hello! From PR Copilot');
-        console.log(`Diff in input ${git_diff}`);
-        const ai_response = await (0, openai_1.introOpenAi)(core.getInput('openAiApiKey'));
+        const diff_file = (0, fs_1.readFileSync)(git_diff_file, 'utf-8');
+        const systemPrompt = (0, fs_1.readFileSync)('./prompts/system.txt', 'utf-8');
+        core.debug(`Diff in input ${diff_file}`);
+        console.log(`Diff in input ${diff_file}`);
+        const ai_response = await (0, openai_1.introOpenAi)(core.getInput('openAiApiKey'), systemPrompt, diff_file);
         console.log(`From AI:\n${ai_response}`);
         // Set outputs for other workflow steps to use
         core.setOutput('result', 'OK');
@@ -39752,13 +39740,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.introOpenAi = void 0;
 const openai_1 = __importDefault(__nccwpck_require__(47));
-async function introOpenAi(openAiApiKey) {
+async function introOpenAi(openAiApiKey, systemPrompt, user) {
     const openai = new openai_1.default({ apiKey: openAiApiKey });
-    const systemPrompt = 'Say Hello in Polish!';
     const completion = await openai.chat.completions.create({
         messages: [
             { role: 'system', content: systemPrompt },
-            { role: 'user', content: 'Hello!' }
+            { role: 'user', content: user }
         ],
         model: 'gpt-3.5-turbo'
     });

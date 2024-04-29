@@ -1,14 +1,16 @@
 import OpenAI from 'openai'
 
-export async function introOpenAi(openAiApiKey: string): Promise<string> {
+export async function introOpenAi(
+  openAiApiKey: string,
+  systemPrompt: string,
+  user: string
+): Promise<string> {
   const openai = new OpenAI({ apiKey: openAiApiKey })
-
-  const systemPrompt = 'Say Hello in Polish!'
 
   const completion = await openai.chat.completions.create({
     messages: [
       { role: 'system', content: systemPrompt },
-      { role: 'user', content: 'Hello!' }
+      { role: 'user', content: user }
     ],
     model: 'gpt-3.5-turbo'
   })

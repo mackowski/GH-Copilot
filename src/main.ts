@@ -2,39 +2,29 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { introOpenAi } from './openai'
 import { readFileSync } from 'fs'
-import * as fs from 'fs'
 
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 export async function run(): Promise<void> {
-  try {
-    fs.readdir('.', (err: Error | null, files: string[]) => {
-      if (err) {
-        console.error('Failed to read directory:', err)
-        return
-      }
-      for (const file of files) {
-        console.log(file)
-      }
-    })
+  console.log('Hello! From PR-Copilot')
 
-    const git_diff: string = core.getInput('git_diff')
+  try {
+    const git_diff_file: string = core.getInput('git_diff_file')
     const github_token = core.getInput('GITHUB_TOKEN')
     const context = github.context
+    const diff_file = readFileSync(git_diff_file, 'utf-8')
+    const systemPrompt = readFileSync('./prompts/system.txt', 'utf-8')
 
-    const file = readFileSync('./dist/test_diff.txt', 'utf-8')
-    core.debug(`Diff in input ${file}`)
-    console.log(`Diff in input ${file}`)
+    core.debug(`Diff in input ${diff_file}`)
+    console.log(`Diff in input ${diff_file}`)
 
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Diff in input ${git_diff}`)
-
-    console.log('Hello! From PR Copilot')
-    console.log(`Diff in input ${git_diff}`)
-
-    const ai_response = await introOpenAi(core.getInput('openAiApiKey'))
+    const ai_response = await introOpenAi(
+      core.getInput('openAiApiKey'),
+      systemPrompt,
+      diff_file
+    )
     console.log(`From AI:\n${ai_response}`)
 
     // Set outputs for other workflow steps to use
