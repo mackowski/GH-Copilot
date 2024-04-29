@@ -41,7 +41,7 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Test Local Action PR Copilot
+      - name: Test Local Action PR Copilot - ehh
         id: test-action
         uses: ./
         with:
