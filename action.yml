@@ -9,14 +9,14 @@ branding:
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  git_diff:
+    description: 'Diff from GIT'
     required: true
-    default: '1000'
+    default: 'invalid input'
 
 # Define your outputs here.
 outputs:
-  time:
+  result:
     description: 'Your output description here'
 
 runs:
