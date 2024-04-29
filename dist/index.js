@@ -39700,7 +39700,7 @@ async function run() {
         const ai_response = await (0, openai_1.introOpenAi)(core.getInput('openAiApiKey'), systemPrompt, diff_file);
         console.log(`From AI:\n${ai_response}`);
         // Set outputs for other workflow steps to use
-        core.setOutput('result', 'OK');
+        core.setOutput('result', ai_response);
         if (context.payload.pull_request == null) {
             //core.setFailed('No pull request found.')
             console.log('No pull request found.');
@@ -39714,7 +39714,7 @@ async function run() {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: pull_request_number,
-                body: 'PR Comment'
+                body: ai_response
             });
         }
     }
