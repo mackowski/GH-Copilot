@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import { introOpenAi } from './openai'
 
 /**
  * The main function for the action.
@@ -32,6 +33,19 @@ export async function run(): Promise<void> {
 
     core.debug(`Formatted Diff 2:\n${git_diff}`)
     console.log(`Formatted Diff 2:\n${git_diff}`)
+
+    git_diff = git_diff
+      .replace(/(diff --git a\/.*? b\/.*?)(?= index)/g, '$1\n')
+      .replace(/(index [^\n]+)(?= ---)/g, '$1\n')
+      .replace(/(--- a\/[^\n]+)(?= \+\+\+)/g, '$1\n')
+      .replace(/(\+\+\+ b\/[^\n]+)(?= @@)/g, '$1\n')
+      .replace(/(@@ [^\n]+ @@)/g, '$1\n')
+
+    core.debug(`Formatted Diff 3:\n${git_diff}`)
+    console.log(`Formatted Diff 3:\n${git_diff}`)
+
+    const ai_response = await introOpenAi(core.getInput('openAiApiKey'))
+    console.log(`From AI:\n${ai_response}`)
 
     // Set outputs for other workflow steps to use
     core.setOutput('result', 'OK')

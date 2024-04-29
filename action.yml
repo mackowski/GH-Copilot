@@ -12,7 +12,9 @@ inputs:
   git_diff:
     description: 'Diff from GIT'
     required: true
-    default: 'invalid input'
+  openAiApiKey:
+    description: 'OpenAI API Key'
+    required: true
 
 # Define your outputs here.
 outputs:
