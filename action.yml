@@ -15,7 +15,9 @@ inputs:
   openAiApiKey:
     description: 'OpenAI API Key'
     required: true
-
+  GITHUB_TOKEN:
+    description: 'GitHub token'
+    required: true
 # Define your outputs here.
 outputs:
   result:
