@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { introOpenAi } from './openai'
 import { readFileSync } from 'fs'
+import * as fs from 'fs'
 
 /**
  * The main function for the action.
@@ -9,11 +10,21 @@ import { readFileSync } from 'fs'
  */
 export async function run(): Promise<void> {
   try {
+    fs.readdir('.', (err: Error | null, files: string[]) => {
+      if (err) {
+        console.error('Failed to read directory:', err)
+        return
+      }
+      for (const file of files) {
+        console.log(file)
+      }
+    })
+
     const git_diff: string = core.getInput('git_diff')
     const github_token = core.getInput('GITHUB_TOKEN')
     const context = github.context
 
-    const file = readFileSync('./test_diff.txt', 'utf-8')
+    const file = readFileSync('./dist/test_diff.txt', 'utf-8')
     core.debug(`Diff in input ${file}`)
     console.log(`Diff in input ${file}`)
 

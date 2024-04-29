@@ -39683,16 +39683,26 @@ const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const openai_1 = __nccwpck_require__(4499);
 const fs_1 = __nccwpck_require__(7147);
+const fs = __importStar(__nccwpck_require__(7147));
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 async function run() {
     try {
+        fs.readdir('.', (err, files) => {
+            if (err) {
+                console.error('Failed to read directory:', err);
+                return;
+            }
+            for (const file of files) {
+                console.log(file);
+            }
+        });
         const git_diff = core.getInput('git_diff');
         const github_token = core.getInput('GITHUB_TOKEN');
         const context = github.context;
-        const file = (0, fs_1.readFileSync)('./test_diff.txt', 'utf-8');
+        const file = (0, fs_1.readFileSync)('./dist/test_diff.txt', 'utf-8');
         core.debug(`Diff in input ${file}`);
         console.log(`Diff in input ${file}`);
         // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
