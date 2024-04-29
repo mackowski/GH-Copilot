@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { introOpenAi } from './openai'
+import { readFileSync } from 'fs'
 
 /**
  * The main function for the action.
@@ -8,41 +9,19 @@ import { introOpenAi } from './openai'
  */
 export async function run(): Promise<void> {
   try {
-    let git_diff: string = core.getInput('git_diff')
+    const git_diff: string = core.getInput('git_diff')
     const github_token = core.getInput('GITHUB_TOKEN')
     const context = github.context
+
+    const file = readFileSync('./test_diff.txt', 'utf-8')
+    core.debug(`Diff in input ${file}`)
+    console.log(`Diff in input ${file}`)
 
     // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
     core.debug(`Diff in input ${git_diff}`)
 
     console.log('Hello! From PR Copilot')
-
     console.log(`Diff in input ${git_diff}`)
-
-    git_diff = git_diff.replace(/(?<=\b(?:diff|index|---|\+\+\+|@@)) /g, '\n')
-
-    core.debug(`Formatted Diff:\n${git_diff}`)
-    console.log(`Formatted Diff:\n${git_diff}`)
-
-    git_diff = git_diff
-      .replace(/(diff --git a\/.*? b\/.*?)(?= index)/g, '$1\n')
-      .replace(/(index .*?)(?= ---)/g, '$1\n')
-      .replace(/(--- a\/.*?)(?= \+\+\+)/g, '$1\n')
-      .replace(/(\+\+\+ b\/.*?)(?= @@)/g, '$1\n')
-      .replace(/(@@ .*? @@)/g, '$1\n')
-
-    core.debug(`Formatted Diff 2:\n${git_diff}`)
-    console.log(`Formatted Diff 2:\n${git_diff}`)
-
-    git_diff = git_diff
-      .replace(/(diff --git a\/.*? b\/.*?)(?= index)/g, '$1\n')
-      .replace(/(index [^\n]+)(?= ---)/g, '$1\n')
-      .replace(/(--- a\/[^\n]+)(?= \+\+\+)/g, '$1\n')
-      .replace(/(\+\+\+ b\/[^\n]+)(?= @@)/g, '$1\n')
-      .replace(/(@@ [^\n]+ @@)/g, '$1\n')
-
-    core.debug(`Formatted Diff 3:\n${git_diff}`)
-    console.log(`Formatted Diff 3:\n${git_diff}`)
 
     const ai_response = await introOpenAi(core.getInput('openAiApiKey'))
     console.log(`From AI:\n${ai_response}`)

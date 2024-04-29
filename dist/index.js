@@ -39682,38 +39682,23 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const openai_1 = __nccwpck_require__(4499);
+const fs_1 = __nccwpck_require__(7147);
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 async function run() {
     try {
-        let git_diff = core.getInput('git_diff');
+        const git_diff = core.getInput('git_diff');
         const github_token = core.getInput('GITHUB_TOKEN');
         const context = github.context;
+        const file = (0, fs_1.readFileSync)('./test_diff.txt', 'utf-8');
+        core.debug(`Diff in input ${file}`);
+        console.log(`Diff in input ${file}`);
         // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
         core.debug(`Diff in input ${git_diff}`);
         console.log('Hello! From PR Copilot');
         console.log(`Diff in input ${git_diff}`);
-        git_diff = git_diff.replace(/(?<=\b(?:diff|index|---|\+\+\+|@@)) /g, '\n');
-        core.debug(`Formatted Diff:\n${git_diff}`);
-        console.log(`Formatted Diff:\n${git_diff}`);
-        git_diff = git_diff
-            .replace(/(diff --git a\/.*? b\/.*?)(?= index)/g, '$1\n')
-            .replace(/(index .*?)(?= ---)/g, '$1\n')
-            .replace(/(--- a\/.*?)(?= \+\+\+)/g, '$1\n')
-            .replace(/(\+\+\+ b\/.*?)(?= @@)/g, '$1\n')
-            .replace(/(@@ .*? @@)/g, '$1\n');
-        core.debug(`Formatted Diff 2:\n${git_diff}`);
-        console.log(`Formatted Diff 2:\n${git_diff}`);
-        git_diff = git_diff
-            .replace(/(diff --git a\/.*? b\/.*?)(?= index)/g, '$1\n')
-            .replace(/(index [^\n]+)(?= ---)/g, '$1\n')
-            .replace(/(--- a\/[^\n]+)(?= \+\+\+)/g, '$1\n')
-            .replace(/(\+\+\+ b\/[^\n]+)(?= @@)/g, '$1\n')
-            .replace(/(@@ [^\n]+ @@)/g, '$1\n');
-        core.debug(`Formatted Diff 3:\n${git_diff}`);
-        console.log(`Formatted Diff 3:\n${git_diff}`);
         const ai_response = await (0, openai_1.introOpenAi)(core.getInput('openAiApiKey'));
         console.log(`From AI:\n${ai_response}`);
         // Set outputs for other workflow steps to use

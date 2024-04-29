@@ -1,0 +1,35 @@
+diff --git a/.github/workflows/getdiff.yml b/.github/workflows/getdiff.yml
+index 15969ab..5efbf8c 100644
+--- a/.github/workflows/getdiff.yml
++++ b/.github/workflows/getdiff.yml
+@@ -20,3 +20,31 @@ jobs:
+         - name: use diff
+           run: | 
+             echo $DIFF
++  store-diff:
++      runs-on: ubuntu-latest
++      name: Get Diff and store in diff.txt
++      steps:
++       - name: Checkout
++         id: checkout_2
++         uses: actions/checkout@v4
++         with:
++            fetch-depth: 2
++       - name: git diff to file
++         run: git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} > diff.txt
++       - name: Upload math result for job 1
++         uses: actions/upload-artifact@v4
++         with:
++           name: diff
++           path: diff.txt
++  use-diff:
++    runs-on: ubuntu-latest
++    needs: store-diff
++    name: use diff
++    steps:
++    - name: Download diff from store-diff
++      uses: actions/download-artifact@v4
++      with:
++        name: diff
++    - shell: bash
++      run: cat ./diff.txt
