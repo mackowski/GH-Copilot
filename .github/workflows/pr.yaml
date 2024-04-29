@@ -25,13 +25,13 @@ jobs:
     needs: store-diff
     name: use diff
     steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
       - name: Download diff from store-diff
         uses: actions/download-artifact@v4
         with:
           name: diff
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
       - name: PR Copilot
         id: test-action
         uses: ./
