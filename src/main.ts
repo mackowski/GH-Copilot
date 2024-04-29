@@ -15,6 +15,7 @@ export async function run(): Promise<void> {
     core.debug(`Diff in input ${git_diff}`)
 
     console.log('Hello! From PR Copilot')
+
     console.log(`Diff in input ${git_diff}`)
 
     git_diff = git_diff.replace(/(?<=\b(?:diff|index|---|\+\+\+|@@)) /g, '\n')
@@ -22,14 +23,24 @@ export async function run(): Promise<void> {
     core.debug(`Formatted Diff:\n${git_diff}`)
     console.log(`Formatted Diff:\n${git_diff}`)
 
+    git_diff = git_diff
+      .replace(/(diff --git a\/.*? b\/.*?)(?= index)/g, '$1\n')
+      .replace(/(index .*?)(?= ---)/g, '$1\n')
+      .replace(/(--- a\/.*?)(?= \+\+\+)/g, '$1\n')
+      .replace(/(\+\+\+ b\/.*?)(?= @@)/g, '$1\n')
+      .replace(/(@@ .*? @@)/g, '$1\n')
+
+    core.debug(`Formatted Diff 2:\n${git_diff}`)
+    console.log(`Formatted Diff 2:\n${git_diff}`)
+
     // Set outputs for other workflow steps to use
     core.setOutput('result', 'OK')
 
     if (context.payload.pull_request == null) {
-      core.setFailed('No pull request found.')
+      //core.setFailed('No pull request found.')
       console.log('No pull request found.')
     } else {
-      core.setFailed('PR Flow')
+      //core.setFailed('PR Flow')
       console.log('PR Folw!')
       const pull_request_number = context.payload.pull_request.number
 
