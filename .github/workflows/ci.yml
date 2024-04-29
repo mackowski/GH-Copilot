@@ -47,7 +47,6 @@ jobs:
         with:
           git_diff_file: './dist/test_diff.txt'
           openAiApiKey: ${{ secrets.OPENAIAPIKEY }}
-
       - name: Print Output
         id: output
         run: echo "${{ steps.test-action.outputs.result }}"

@@ -28,7 +28,7 @@ export async function run(): Promise<void> {
     console.log(`From AI:\n${ai_response}`)
 
     // Set outputs for other workflow steps to use
-    core.setOutput('result', 'OK')
+    core.setOutput('result', ai_response)
 
     if (context.payload.pull_request == null) {
       //core.setFailed('No pull request found.')
@@ -43,7 +43,7 @@ export async function run(): Promise<void> {
         owner: context.repo.owner,
         repo: context.repo.repo,
         issue_number: pull_request_number,
-        body: 'PR Comment'
+        body: ai_response
       })
     }
   } catch (error) {
